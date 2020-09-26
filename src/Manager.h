@@ -14,6 +14,7 @@
 #include "CustomTraderSpi.h"
 #include "CustomUserStruct.h"
 #include <queue>
+#include <mutex>
 
 class Manager{
 
@@ -26,6 +27,7 @@ private:
 	std::string m_authCode;
 	char m_marketFrontAddr[30];
 	char m_traderFrontAddr[30];
+	char m_trading_day[10];
 
 	//instruments info
 	char * *m_instrumentIDs;
@@ -41,8 +43,10 @@ private:
 	int m_count;
 
 	std::queue<Message> m_msgQueue;
+	std::mutex m_queMutex;
 	std::ofstream m_logFile;
 	std::ofstream m_signalFile;
+	std::ofstream m_quoteFile;
 
 	double m_ask[2];
 	double m_bid[2];
@@ -52,14 +56,14 @@ public:
 	void setAccountInfo(std::string brokerID, std::string userID, std::string password, std::string appID, std::string authCode);
 	void setMarketFrontAddr(std::string marketFrontAddr);
 	void setTraderFrontAddr(std::string traderFrontAddr);
-	void setInstruments(char * *instrumentIDs, int nInstruments);
+	void setInstruments(char **instrumentIDs, int nInstruments);
 	void init();
 	void run();
 	~Manager()
 	{
 		this->m_signalFile.close();
+		this->m_quoteFile.close();
 	}
-
 };
 
 

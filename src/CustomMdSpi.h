@@ -12,6 +12,7 @@
 #include "CustomUserStruct.h"
 #include <fstream>
 #include <queue>
+#include <mutex>
 
 class CustomMdSpi : public CThostFtdcMdSpi
 {
@@ -19,10 +20,11 @@ private:
 	CThostFtdcMdApi *m_pMdApi;
 	//std::ofstream logFile;
 	std::queue<Message> *m_msgQueue;
+	std::mutex *m_queMutex;
 
 public:
 
-	CustomMdSpi(CThostFtdcMdApi *pMdApi, std::queue<Message> *msgQueue);
+	CustomMdSpi(CThostFtdcMdApi *pMdApi, std::queue<Message> *msgQueue, std::mutex *queMutex);
 
 	virtual ~CustomMdSpi();
 

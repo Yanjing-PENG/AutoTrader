@@ -12,6 +12,7 @@
 #include "CustomUserStruct.h"
 #include <fstream>
 #include <queue>
+#include <mutex>
 
 class CustomTraderSpi : public CThostFtdcTraderSpi
 {
@@ -19,12 +20,13 @@ private:
 
 	CThostFtdcTraderApi *m_pTraderApi;
 	std::queue<Message> *m_msgQueue;
+	std::mutex *m_queMutex;
 	//int m_nRequestID;
 	//TThostFtdcOrderRefType	m_orderRef;
 
 public:
 
-	CustomTraderSpi(CThostFtdcTraderApi *pTraderApi, std::queue<Message> *msgQueue);
+	CustomTraderSpi(CThostFtdcTraderApi *pTraderApi, std::queue<Message> *msgQueue, std::mutex *queMutex);
 
 	virtual ~CustomTraderSpi();
 
@@ -51,6 +53,8 @@ public:
 	virtual void OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	virtual void OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+
+	virtual void OnErrRtnOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo);
 
 	virtual void OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
